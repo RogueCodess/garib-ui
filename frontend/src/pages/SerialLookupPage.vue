@@ -13,6 +13,7 @@
         <input
           v-model="query"
           type="text"
+          aria-label="Serial number"
           placeholder="Enter serial number…"
           class="flex-1 border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
           @keydown.enter="doSearch"
@@ -76,7 +77,7 @@ async function doSearch() {
     serialResource.update({
       filters: [['Serial No', 'name', 'like', `%${q}%`]],
     })
-    await serialResource.fetch()
+    await serialResource.list.fetch()
     results.value = serialResource.data ?? []
     searched.value = true
 
