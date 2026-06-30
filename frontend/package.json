@@ -11,7 +11,7 @@
     "test:watch": "vitest"
   },
   "dependencies": {
-    "frappe-ui": "latest",
+    "frappe-ui": "^0.1.278",
     "pinia": "^2.1.7",
     "vue": "^3.4.0",
     "vue-router": "^4.3.0"

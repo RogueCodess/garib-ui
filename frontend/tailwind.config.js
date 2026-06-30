@@ -1,6 +1,8 @@
 import path from 'path'
+import frappeUIPreset from 'frappe-ui/tailwind'
 
 export default {
+  presets: [frappeUIPreset],
   content: [
     './index.html',
     './src/**/*.{vue,js}',
