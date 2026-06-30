@@ -4,7 +4,7 @@ import frappeUIPlugin from 'frappe-ui/vite'
 import path from 'path'
 
 export default defineConfig({
-  plugins: [vue(), frappeUIPlugin({ frappeProxy: false })],
+  plugins: [vue(), frappeUIPlugin({ frappeProxy: false, buildConfig: false, jinjaBootData: false })],
   base: '/assets/garib_ui/garib/',
   build: {
     outDir: path.resolve(__dirname, '../garib_ui/public/garib'),
