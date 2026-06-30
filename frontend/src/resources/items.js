@@ -44,7 +44,7 @@ export function useItemDoc(itemCode) {
   return createResource({
     url: 'frappe.client.get',
     params: { doctype: 'Item', name: itemCode },
-    auto: true,
+    auto: false,
   })
 }
 

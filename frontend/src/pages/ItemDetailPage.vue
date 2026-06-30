@@ -166,7 +166,7 @@ const editAcType = ref('')
 const editPrice = ref('')
 
 watch(item, (it) => {
-  if (!it) return
+  if (!it || saving.value) return
   editCapacity.value = it.custom_capacity ?? ''
   editAcType.value = it.custom_ac_type ?? ''
 }, { immediate: true })
