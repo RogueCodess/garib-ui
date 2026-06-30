@@ -14,7 +14,7 @@ const routes = [
 ]
 
 const router = createRouter({
-  history: createWebHistory(),
+  history: createWebHistory('/garib/'),
   routes,
 })
 
@@ -22,12 +22,13 @@ const router = createRouter({
 router.beforeEach(async (to, from, next) => {
   try {
     const user = await frappeRequest({ url: '/api/method/frappe.auth.get_logged_user' })
-    if (!user) {
+    if (!user || user === 'Guest') {
       window.location.href = '/login?redirect-to=/garib'
       return
     }
     next()
-  } catch {
+  } catch (e) {
+    console.error('Auth check failed:', e)
     window.location.href = '/login?redirect-to=/garib'
   }
 })
