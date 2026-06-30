@@ -5,10 +5,13 @@ const COMPANY = 'Garib Appliances'
 export function useItemList() {
   return createListResource({
     doctype: 'Item',
+    // NOTE: actual_qty is NOT a field on Item (it lives on Bin) — including it
+    // makes Frappe reject the whole query ("Field not permitted in query"),
+    // returning an empty list. Stock-on-hand is merged in from Bin separately.
     fields: [
       'item_code', 'item_name', 'item_group', 'brand',
       'custom_capacity', 'custom_ac_type', 'warranty_period',
-      'has_serial_no', 'is_stock_item', 'actual_qty',
+      'has_serial_no', 'is_stock_item',
     ],
     filters: [['Item Default', 'company', '=', COMPANY]],
     orderBy: 'item_name asc',

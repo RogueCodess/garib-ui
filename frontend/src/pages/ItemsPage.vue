@@ -108,11 +108,23 @@ import { ref, reactive, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import ErrorBanner from '@/components/ErrorBanner.vue'
 import { useItemList, useItemPrices, filterItems } from '@/resources/items'
+import { useBinList } from '@/resources/stock'
 
 const router = useRouter()
 
 const itemList = useItemList()
 const priceList = useItemPrices()
+const binList = useBinList()
+
+// Total stock-on-hand per item_code, summed across all GA warehouses (Bin).
+// Item has no actual_qty field, so stock is sourced separately and merged in.
+const stockByItem = computed(() => {
+  const map = {}
+  for (const bin of binList.data ?? []) {
+    map[bin.item_code] = (map[bin.item_code] ?? 0) + (bin.actual_qty ?? 0)
+  }
+  return map
+})
 
 const search = ref('')
 const filters = reactive({ brand: '', ac_type: '', inStockOnly: false })
@@ -134,7 +146,12 @@ const brands = computed(() => {
 })
 
 const filteredItems = computed(() => {
-  const items = itemList.data ?? []
+  // Merge stock-on-hand onto each item so the Stock column and the
+  // "in stock only" filter (which read item.actual_qty) work correctly.
+  const items = (itemList.data ?? []).map(item => ({
+    ...item,
+    actual_qty: stockByItem.value[item.item_code] ?? 0,
+  }))
   return filterItems(items, filters, search.value)
 })
 

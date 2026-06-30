@@ -7,13 +7,15 @@ export const GA_WAREHOUSES = [
   'Stores - GA',
 ]
 
-const COMPANY = 'Garib Appliances'
-
 export function useBinList() {
   return createListResource({
     doctype: 'Bin',
     fields: ['item_code', 'warehouse', 'actual_qty'],
-    filters: [['Warehouse', 'company', '=', COMPANY]],
+    // Bin's warehouse is a LINK, not a child table — filtering as
+    // [['Warehouse', 'company', ...]] makes Frappe attempt a child-table join
+    // and 500s ("Unknown column tabWarehouse.parenttype"). Filter the warehouse
+    // field directly against the known GA warehouse list instead.
+    filters: [['warehouse', 'in', GA_WAREHOUSES]],
     pageLength: 2000,
     auto: true,
   })
