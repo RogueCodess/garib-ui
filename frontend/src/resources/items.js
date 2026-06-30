@@ -2,6 +2,17 @@ import { createListResource, createResource } from 'frappe-ui'
 
 const COMPANY = 'Garib Appliances'
 
+// Garib Appliances product/service categories. Used to scope the Items list
+// AND the New Item form so the two stay consistent. We filter by item_group
+// (a direct Item field) rather than the company on the item_defaults child
+// table: the child-table filter [['Item Default','company',...]] resolves to an
+// empty set through frappe-ui's frappe.client.get_list path, and this also
+// cleanly excludes leftover non-GA (Soeram) items in other groups.
+export const GA_ITEM_GROUPS = [
+  'Split', 'Window', 'Portable', 'Inverter',
+  'Accessories', 'Spare Parts', 'Services',
+]
+
 export function useItemList() {
   return createListResource({
     doctype: 'Item',
@@ -13,7 +24,7 @@ export function useItemList() {
       'custom_capacity', 'custom_ac_type', 'warranty_period',
       'has_serial_no', 'is_stock_item',
     ],
-    filters: [['Item Default', 'company', '=', COMPANY]],
+    filters: [['item_group', 'in', GA_ITEM_GROUPS]],
     orderBy: 'item_name asc',
     pageLength: 500,
     auto: true,

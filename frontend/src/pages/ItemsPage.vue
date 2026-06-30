@@ -147,7 +147,7 @@
                 <label class="block text-sm font-medium text-gray-700 mb-1">Item Group <span class="text-red-500">*</span></label>
                 <select v-model="newItem.itemGroup" class="border border-gray-300 rounded-md px-3 py-2 text-sm w-full">
                   <option value="">Select…</option>
-                  <option v-for="g in itemGroups.data ?? []" :key="g.name" :value="g.name">{{ g.name }}</option>
+                  <option v-for="g in itemGroupOptions" :key="g" :value="g">{{ g }}</option>
                 </select>
               </div>
               <div>
@@ -198,7 +198,7 @@ import { useRouter } from 'vue-router'
 import ErrorBanner from '@/components/ErrorBanner.vue'
 import {
   useItemList, useItemPrices, filterItems,
-  useItemGroups, useBrands, createItem, createItemPrice,
+  useBrands, createItem, createItemPrice, GA_ITEM_GROUPS,
 } from '@/resources/items'
 import { useBinList } from '@/resources/stock'
 
@@ -207,8 +207,8 @@ const router = useRouter()
 const itemList = useItemList()
 const priceList = useItemPrices()
 const binList = useBinList()
-const itemGroups = useItemGroups()
 const brandList = useBrands()
+const itemGroupOptions = GA_ITEM_GROUPS
 
 // Total stock-on-hand per item_code, summed across all GA warehouses (Bin).
 // Item has no actual_qty field, so stock is sourced separately and merged in.
