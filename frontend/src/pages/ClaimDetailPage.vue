@@ -110,7 +110,8 @@ watch(
     if (!doc) return
     editStatus.value = doc.status ?? 'Open'
     editTechnician.value = doc.custom_assigned_technician ?? ''
-    editNotes.value = doc.custom_resolution_notes ?? ''
+    // Resolution notes use the native Warranty Claim field.
+    editNotes.value = doc.resolution_details ?? ''
   },
   { immediate: true },
 )
@@ -130,8 +131,11 @@ async function saveChanges() {
     const updatedDoc = {
       ...claimDoc.data,
       status: editStatus.value,
+      // Native field — persists immediately.
+      resolution_details: editNotes.value,
+      // Custom field — persists once `custom_assigned_technician` is added to
+      // Warranty Claim. Harmless if absent (Frappe ignores unknown fields).
       custom_assigned_technician: editTechnician.value,
-      custom_resolution_notes: editNotes.value,
     }
     const saver = saveClaim(updatedDoc)
     await saver.submit()

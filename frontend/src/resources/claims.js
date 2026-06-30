@@ -5,9 +5,11 @@ export function useClaimList(statusFilter) {
     doctype: 'Warranty Claim',
     fields: ['name', 'serial_no', 'item_code', 'customer', 'status', 'creation'],
     filters: statusFilter && statusFilter !== 'All'
-      ? [['Warranty Claim', 'status', '=', statusFilter]]
+      ? [['status', '=', statusFilter]]
       : [],
-    orderBy: 'Warranty Claim.creation desc',
+    // Must be a bare column — a 'Warranty Claim.creation' prefix renders as
+    // unquoted SQL (table name has a space) and 500s the whole list.
+    orderBy: 'creation desc',
     pageLength: 100,
     auto: true,
   })

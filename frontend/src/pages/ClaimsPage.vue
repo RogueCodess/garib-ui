@@ -89,7 +89,7 @@ function selectStatus(s) {
   activeStatus.value = s
   const filter = s === 'All' ? null : s
   const filters = filter
-    ? [['Warranty Claim', 'status', '=', filter]]
+    ? [['status', '=', filter]]
     : []
   claimList.update({ filters })
   claimList.reload()
