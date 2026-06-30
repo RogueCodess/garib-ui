@@ -12,6 +12,9 @@
         </button>
       </div>
 
+      <!-- TEMP DEBUG PANEL -->
+      <pre class="mb-4 p-3 bg-yellow-50 border border-yellow-300 rounded text-xs text-gray-800 whitespace-pre-wrap break-all">{{ debugInfo }}</pre>
+
       <!-- Error banner -->
       <ErrorBanner :message="itemList.error?.message" />
 
@@ -209,6 +212,20 @@ const priceList = useItemPrices()
 const binList = useBinList()
 const brandList = useBrands()
 const itemGroupOptions = GA_ITEM_GROUPS
+
+// TEMP DEBUG — surfaces what the live requests actually return
+import { cachedUser } from '@/router'
+const debugInfo = computed(() => {
+  const l = itemList.list || {}
+  return JSON.stringify({
+    user: cachedUser.value,
+    items_loading: itemList.list?.loading,
+    items_error: itemList.list?.error?.messages || itemList.list?.error?.message || String(itemList.list?.error || ''),
+    items_count: (itemList.data || []).length,
+    bin_count: (binList.data || []).length,
+    bin_error: binList.list?.error?.message || String(binList.list?.error || ''),
+  }, null, 2)
+})
 
 // Total stock-on-hand per item_code, summed across all GA warehouses (Bin).
 // Item has no actual_qty field, so stock is sourced separately and merged in.
