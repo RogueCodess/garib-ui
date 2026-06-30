@@ -3,10 +3,7 @@
 {% block title %}Garib Appliances{% endblock %}
 
 {% block head_include %}
-{# Cache-bust the fixed-name entry assets. The token is regenerated whenever
-   Frappe re-renders this page (i.e. on each deploy / cache clear), so browsers
-   never serve a stale index.js/css against a 1-year asset cache header. #}
-<link rel="stylesheet" href="/assets/garib_ui/garib/index.css?v={{ frappe.utils.random_string(10) }}">
+<link rel="stylesheet" href="/assets/garib_ui/garib/index.css">
 <style>body { margin: 0; }</style>
 {% endblock %}
 
@@ -15,5 +12,5 @@
 {% endblock %}
 
 {% block script %}
-<script type="module" src="/assets/garib_ui/garib/index.js?v={{ frappe.utils.random_string(10) }}"></script>
+<script type="module" src="/assets/garib_ui/garib/index.js"></script>
 {% endblock %}
