@@ -67,14 +67,14 @@
         <table class="min-w-full divide-y divide-gray-200 text-sm">
           <thead class="bg-gray-50">
             <tr>
-              <th class="px-4 py-3 text-left font-medium text-gray-500">Item Code</th>
-              <th class="px-4 py-3 text-left font-medium text-gray-500">Name</th>
-              <th class="px-4 py-3 text-left font-medium text-gray-500">Group</th>
-              <th class="px-4 py-3 text-left font-medium text-gray-500">Brand</th>
-              <th class="px-4 py-3 text-left font-medium text-gray-500">Capacity</th>
-              <th class="px-4 py-3 text-left font-medium text-gray-500">Type</th>
-              <th class="px-4 py-3 text-right font-medium text-gray-500">Price (SRD)</th>
-              <th class="px-4 py-3 text-right font-medium text-gray-500">Stock</th>
+              <th scope="col" class="px-4 py-3 text-left font-medium text-gray-500">Item Code</th>
+              <th scope="col" class="px-4 py-3 text-left font-medium text-gray-500">Name</th>
+              <th scope="col" class="px-4 py-3 text-left font-medium text-gray-500">Group</th>
+              <th scope="col" class="px-4 py-3 text-left font-medium text-gray-500">Brand</th>
+              <th scope="col" class="px-4 py-3 text-left font-medium text-gray-500">Capacity</th>
+              <th scope="col" class="px-4 py-3 text-left font-medium text-gray-500">Type</th>
+              <th scope="col" class="px-4 py-3 text-right font-medium text-gray-500">Price (SRD)</th>
+              <th scope="col" class="px-4 py-3 text-right font-medium text-gray-500">Stock</th>
             </tr>
           </thead>
           <tbody class="divide-y divide-gray-100">
@@ -82,7 +82,9 @@
               v-for="item in filteredItems"
               :key="item.item_code"
               class="hover:bg-blue-50 cursor-pointer transition-colors"
+              tabindex="0"
               @click="router.push(`/items/${item.item_code}`)"
+              @keydown.enter="router.push(`/items/${item.item_code}`)"
             >
               <td class="px-4 py-3 font-mono text-xs text-blue-700">{{ item.item_code }}</td>
               <td class="px-4 py-3 text-gray-900">{{ item.item_name }}</td>
@@ -140,9 +142,18 @@ const filteredItems = computed(() => {
   return filterItems(items, filters, search.value)
 })
 
+const priceMap = computed(() => {
+  const map = new Map()
+  for (const p of priceList.data ?? []) {
+    map.set(p.item_code, p.price_list_rate)
+  }
+  return map
+})
+
 function priceFor(itemCode) {
-  const prices = priceList.data ?? []
-  const row = prices.find(p => p.item_code === itemCode)
-  return row ? `SRD ${Number(row.price_list_rate).toLocaleString('nl-SR', { minimumFractionDigits: 2 })}` : '—'
+  const rate = priceMap.value.get(itemCode)
+  return rate != null
+    ? `SRD ${Number(rate).toLocaleString('nl-SR', { minimumFractionDigits: 2 })}`
+    : '—'
 }
 </script>
