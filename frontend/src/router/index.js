@@ -18,7 +18,7 @@ const router = createRouter({
 })
 
 // Module-level auth cache — avoids a round-trip on every navigation
-let cachedUser = null
+export let cachedUser = null
 
 // Auth guard: redirect to Frappe login if not logged in
 router.beforeEach(async () => {
