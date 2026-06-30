@@ -4,10 +4,6 @@
 
 {% block head_include %}
 <link rel="stylesheet" href="/assets/garib_ui/garib/index.css">
-{# frappe-ui reads window.csrf_token to send X-Frappe-CSRF-Token on POST API
-   calls. Without it, logged-in POSTs (e.g. frappe.client.get_list) fail CSRF
-   and get an HTML redirect back, which frappe-ui can't parse as JSON. #}
-<script>window.csrf_token = "{{ csrf_token }}";</script>
 <style>body { margin: 0; }</style>
 {% endblock %}
 
@@ -16,5 +12,11 @@
 {% endblock %}
 
 {% block script %}
+{# frappe-ui sends the X-Frappe-CSRF-Token header only when window.csrf_token is
+   set. Frappe injects the per-session token as frappe.csrf_token (via the
+   <!-- csrf_token --> replacement in base.html); copy it across so logged-in
+   POST API calls (frappe.client.get_list etc.) pass CSRF instead of being
+   answered with an HTML redirect that frappe-ui can't parse as JSON. #}
+<script>window.csrf_token = (window.frappe && frappe.csrf_token) || "";</script>
 <script type="module" src="/assets/garib_ui/garib/index.js"></script>
 {% endblock %}
