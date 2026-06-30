@@ -4,6 +4,10 @@
 
 {% block head_include %}
 <link rel="stylesheet" href="/assets/garib_ui/garib/index.css">
+{# frappe-ui reads window.csrf_token to send X-Frappe-CSRF-Token on POST API
+   calls. Without it, logged-in POSTs (e.g. frappe.client.get_list) fail CSRF
+   and get an HTML redirect back, which frappe-ui can't parse as JSON. #}
+<script>window.csrf_token = "{{ csrf_token }}";</script>
 <style>body { margin: 0; }</style>
 {% endblock %}
 
