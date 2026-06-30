@@ -1,6 +1,4 @@
 <template>
-  <div class="flex h-screen overflow-hidden bg-gray-50">
-    <AppSidebar />
 
     <main class="flex-1 overflow-y-auto p-6 max-w-2xl">
       <div class="mb-6">
@@ -44,12 +42,10 @@
         No serial numbers found for "{{ lastQuery }}".
       </div>
     </main>
-  </div>
 </template>
 
 <script setup>
 import { ref, reactive } from 'vue'
-import AppSidebar from '@/components/AppSidebar.vue'
 import ErrorBanner from '@/components/ErrorBanner.vue'
 import SerialCard from '@/components/SerialCard.vue'
 import { searchSerials } from '@/resources/serials'

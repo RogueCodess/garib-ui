@@ -1,6 +1,4 @@
 <template>
-  <div class="flex h-screen overflow-hidden bg-gray-50">
-    <AppSidebar />
 
     <main class="flex-1 overflow-y-auto p-6 max-w-2xl">
       <div class="mb-4">
@@ -86,13 +84,11 @@
         </div>
       </div>
     </main>
-  </div>
 </template>
 
 <script setup>
 import { ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
-import AppSidebar from '@/components/AppSidebar.vue'
 import ErrorBanner from '@/components/ErrorBanner.vue'
 import { useClaimDoc, saveClaim } from '@/resources/claims'
 

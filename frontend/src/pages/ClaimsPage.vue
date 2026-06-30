@@ -1,6 +1,4 @@
 <template>
-  <div class="flex h-screen overflow-hidden bg-gray-50">
-    <AppSidebar />
 
     <main class="flex-1 overflow-y-auto p-6">
       <div class="mb-6">
@@ -69,13 +67,11 @@
         </table>
       </div>
     </main>
-  </div>
 </template>
 
 <script setup>
 import { ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
-import AppSidebar from '@/components/AppSidebar.vue'
 import ErrorBanner from '@/components/ErrorBanner.vue'
 import StatusBadge from '@/components/StatusBadge.vue'
 import { useClaimList } from '@/resources/claims'
