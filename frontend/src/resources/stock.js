@@ -13,7 +13,7 @@ export function useBinList() {
   return createListResource({
     doctype: 'Bin',
     fields: ['item_code', 'warehouse', 'actual_qty'],
-    filters: { company: COMPANY },
+    filters: [['Warehouse', 'company', '=', COMPANY]],
     pageLength: 2000,
     auto: true,
   })
@@ -25,6 +25,7 @@ export function useBinList() {
  * @returns {Object}
  */
 export function pivotBins(bins) {
+  if (!bins) return {}
   const map = {}
   for (const bin of bins) {
     if (!map[bin.item_code]) map[bin.item_code] = {}

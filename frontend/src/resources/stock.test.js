@@ -27,6 +27,16 @@ describe('pivotBins', () => {
     expect(result['ITEM-A']['WH-1']).toBe(5)
   })
 
+  it('returns empty object for null input', () => {
+    expect(pivotBins(null)).toEqual({})
+  })
+
+  it('returns empty object for undefined input', () => {
+    expect(pivotBins(undefined)).toEqual({})
+  })
+})
+
+describe('GA_WAREHOUSES', () => {
   it('GA_WAREHOUSES contains exactly the 4 Garib Appliances warehouses', () => {
     expect(GA_WAREHOUSES).toContain('Showroom - GA')
     expect(GA_WAREHOUSES).toContain('Main Store - GA')
