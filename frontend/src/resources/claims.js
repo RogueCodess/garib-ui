@@ -5,9 +5,9 @@ export function useClaimList(statusFilter) {
     doctype: 'Warranty Claim',
     fields: ['name', 'serial_no', 'item_code', 'customer', 'status', 'creation'],
     filters: statusFilter && statusFilter !== 'All'
-      ? { status: statusFilter }
-      : {},
-    orderBy: 'creation desc',
+      ? [['Warranty Claim', 'status', '=', statusFilter]]
+      : [],
+    orderBy: 'Warranty Claim.creation desc',
     pageLength: 100,
     auto: true,
   })

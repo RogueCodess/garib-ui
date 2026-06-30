@@ -4,7 +4,7 @@ export function useSerialDoc(serialNo) {
   return createResource({
     url: 'frappe.client.get',
     params: { doctype: 'Serial No', name: serialNo },
-    auto: true,
+    auto: false,
   })
 }
 
