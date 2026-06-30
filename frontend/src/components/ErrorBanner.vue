@@ -7,15 +7,17 @@
   >
     <span class="flex-1 text-sm">{{ message }}</span>
     <button
+      type="button"
       class="text-xs underline hover:no-underline shrink-0"
       @click="$emit('retry')"
     >
       Retry
     </button>
     <button
+      type="button"
       aria-label="Dismiss error"
       class="text-red-400 hover:text-red-600 shrink-0"
-      @click="dismissed = true"
+      @click="dismiss"
     >
       ✕
     </button>
@@ -39,4 +41,6 @@ watch(
 )
 
 const visible = computed(() => !!props.message && !dismissed.value)
+
+function dismiss() { dismissed.value = true }
 </script>

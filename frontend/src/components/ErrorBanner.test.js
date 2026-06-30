@@ -35,4 +35,12 @@ describe('ErrorBanner', () => {
     await wrapper.setProps({ message: 'Error B' })
     expect(wrapper.find('[role="alert"]').exists()).toBe(true)
   })
+
+  it('re-shows after dismiss when the same message is set again via empty-then-same', async () => {
+    const wrapper = mount(ErrorBanner, { props: { message: 'Network error' } })
+    await wrapper.find('[aria-label="Dismiss error"]').trigger('click')
+    await wrapper.setProps({ message: '' })
+    await wrapper.setProps({ message: 'Network error' })
+    expect(wrapper.find('[role="alert"]').exists()).toBe(true)
+  })
 })
