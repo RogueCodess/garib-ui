@@ -8,7 +8,7 @@ export function useItemList() {
     fields: [
       'item_code', 'item_name', 'item_group', 'brand',
       'custom_capacity', 'custom_ac_type', 'warranty_period',
-      'has_serial_no', 'is_stock_item',
+      'has_serial_no', 'is_stock_item', 'actual_qty',
     ],
     filters: [['Item Default', 'company', '=', COMPANY]],
     orderBy: 'item_name asc',
