@@ -15,13 +15,17 @@ export function insertStockEntry(entryDoc) {
 
 /**
  * Submit a Stock Entry after insert.
- * Must pass the exact `modified` timestamp from the inserted doc
- * to avoid concurrency conflicts (ERPNext v15 requirement).
+ *
+ * `frappe.client.submit` runs `frappe.get_doc(doc).submit()` — it rebuilds the
+ * document from whatever dict it receives, it does NOT reload from the DB. So
+ * the FULL inserted doc (including its `items` child rows and current
+ * `modified` timestamp) must be passed; a `{name, modified}` stub would submit
+ * an empty entry with no items.
  */
-export function submitStockEntry(name, modified) {
+export function submitStockEntry(doc) {
   return createResource({
     url: 'frappe.client.submit',
-    params: { doc: { doctype: 'Stock Entry', name, modified } },
+    params: { doc },
     auto: false,
   })
 }

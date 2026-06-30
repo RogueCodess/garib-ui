@@ -122,7 +122,7 @@
 import { ref, computed, reactive } from 'vue'
 import ErrorBanner from '@/components/ErrorBanner.vue'
 import SerialCard from '@/components/SerialCard.vue'
-import { insertStockEntry, submitStockEntry, getStockEntry } from '@/resources/stockEntry'
+import { insertStockEntry, submitStockEntry } from '@/resources/stockEntry'
 import { useSerialDoc } from '@/resources/serials'
 import { GA_WAREHOUSES } from '@/resources/stock'
 
@@ -166,6 +166,11 @@ async function submitForm() {
         item_code: l.itemCode.trim(),
         qty: l.qty,
         t_warehouse: targetWarehouse.value,
+        // ERPNext v15: the legacy serial_no text field is only honored when
+        // use_serial_batch_fields is set; otherwise a Serial & Batch Bundle is
+        // required and the submit fails. This flag makes v15 auto-create the
+        // Serial No records from the typed list on submit.
+        use_serial_batch_fields: 1,
         serial_no: parseSerials(l.serials).join('\n'),
       }))
 
@@ -177,18 +182,16 @@ async function submitForm() {
       items,
     }
 
-    // Insert
+    // Insert (docstatus 0). frappe.client.insert returns the full inserted doc,
+    // including name, current modified timestamp, and the items child rows.
     const inserter = insertStockEntry(entryDoc)
     await inserter.submit()
-    const insertedName = inserter.data?.name
+    const insertedDoc = inserter.data
 
-    // Fetch to get modified timestamp
-    const getter = getStockEntry(insertedName)
-    await getter.fetch()
-    const modified = getter.data?.modified
-
-    // Submit
-    const submitter = submitStockEntry(insertedName, modified)
+    // Submit the full inserted doc — frappe.client.submit rebuilds the document
+    // from the dict it receives (it does not reload from the DB), so the whole
+    // doc with its items must be passed, not just the name.
+    const submitter = submitStockEntry(insertedDoc)
     await submitter.submit()
 
     // Load received serials
