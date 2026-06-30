@@ -27,10 +27,10 @@
       <ErrorBanner :message="error" />
 
       <!-- Loading -->
-      <p v-if="claimList.loading" class="text-sm text-gray-500">Loading…</p>
+      <p v-if="claimList.list.loading" class="text-sm text-gray-500">Loading…</p>
 
       <!-- Empty -->
-      <p v-else-if="!claimList.data?.length" class="text-sm text-gray-500">
+      <p v-else-if="!claimList.list.loading && !claimList.data?.length" class="text-sm text-gray-500">
         No claims found.
       </p>
 
@@ -73,7 +73,7 @@
 </template>
 
 <script setup>
-import { ref, computed, watch } from 'vue'
+import { ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import AppSidebar from '@/components/AppSidebar.vue'
 import ErrorBanner from '@/components/ErrorBanner.vue'
@@ -86,13 +86,18 @@ const STATUS_OPTIONS = ['All', 'Open', 'Work In Progress', 'Closed']
 const activeStatus = ref('All')
 const error = ref('')
 
-// Use a reactive ref so the template re-renders when the filter changes
-const activeFilter = ref(null)
-const claimList = computed(() => useClaimList(activeFilter.value))
+// Create once — filter changes use .update() + .reload()
+const claimList = useClaimList(null)
 
 function selectStatus(s) {
   activeStatus.value = s
-  activeFilter.value = s === 'All' ? null : s
+  const filter = s === 'All' ? null : s
+  const filters = filter
+    ? [['Warranty Claim', 'status', '=', filter]]
+    : []
+  claimList.update({ filters })
+  claimList.reload()
+  error.value = ''
 }
 
 function goToDetail(name) {
@@ -104,7 +109,7 @@ function formatDate(dateStr) {
   return dateStr.slice(0, 10)
 }
 
-watch(() => claimList.value?.error, (e) => {
+watch(() => claimList.list.error, (e) => {
   if (e) error.value = e?.message ?? 'Failed to load claims'
 })
 </script>
