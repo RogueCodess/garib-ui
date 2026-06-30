@@ -39,6 +39,7 @@
                 >
                   <button
                     v-if="qtyAt(itemCode, wh) > 0"
+                    :aria-label="`Show serials: ${itemCode} at ${whShortName(wh)}`"
                     @click="showDrillDown(itemCode, wh)"
                     class="inline-block min-w-8 rounded bg-green-100 text-green-800 font-semibold px-2 py-0.5 hover:bg-green-200 transition-colors"
                   >
@@ -61,7 +62,7 @@
             <h2 class="font-medium text-gray-900">
               {{ drillDown.itemCode }} · {{ drillDown.warehouse }}
             </h2>
-            <button @click="drillDown = null" class="text-gray-400 hover:text-gray-600 text-lg leading-none">×</button>
+            <button @click="drillDown = null" aria-label="Close drill-down" class="text-gray-400 hover:text-gray-600 text-lg leading-none">×</button>
           </div>
 
           <div v-if="drillSerials.loading" class="text-sm text-gray-500">Loading serials…</div>
@@ -116,6 +117,7 @@ watch(drillDown, (dd) => {
       ['Serial No', 'warehouse', '=', dd.warehouse],
     ],
   })
+  drillSerials.setData(null)
   drillSerials.fetch()
 })
 
