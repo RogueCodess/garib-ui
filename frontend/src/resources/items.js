@@ -43,6 +43,76 @@ export function updateItemPrice(itemPriceName, newRate) {
   })
 }
 
+// Leaf (non-group) Item Groups, for the New Item form's group dropdown.
+export function useItemGroups() {
+  return createListResource({
+    doctype: 'Item Group',
+    fields: ['name'],
+    filters: [['is_group', '=', 0]],
+    orderBy: 'name asc',
+    pageLength: 100,
+    auto: true,
+  })
+}
+
+// Brands, for the New Item form's brand dropdown.
+export function useBrands() {
+  return createListResource({
+    doctype: 'Brand',
+    fields: ['name'],
+    orderBy: 'name asc',
+    pageLength: 100,
+    auto: true,
+  })
+}
+
+/**
+ * Create a new Item. company is attached via item_defaults so the item shows
+ * up in the company-filtered Items list. stock_uom defaults to 'Nos' (the
+ * convention used by existing GA items). Naming is by item_code.
+ */
+export function createItem({ itemCode, itemName, itemGroup, brand, hasSerialNo }) {
+  return createResource({
+    url: 'frappe.client.insert',
+    params: {
+      doc: {
+        doctype: 'Item',
+        item_code: itemCode,
+        item_name: itemName,
+        item_group: itemGroup,
+        brand: brand || undefined,
+        stock_uom: 'Nos',
+        is_stock_item: 1,
+        has_serial_no: hasSerialNo ? 1 : 0,
+        item_defaults: [
+          { company: COMPANY, default_warehouse: 'Main Store - GA' },
+        ],
+      },
+    },
+    auto: false,
+  })
+}
+
+/**
+ * Create a Standard Selling Item Price (SRD) for an item.
+ */
+export function createItemPrice({ itemCode, rate }) {
+  return createResource({
+    url: 'frappe.client.insert',
+    params: {
+      doc: {
+        doctype: 'Item Price',
+        item_code: itemCode,
+        price_list: 'Standard Selling',
+        price_list_rate: rate,
+        selling: 1,
+        currency: 'SRD',
+      },
+    },
+    auto: false,
+  })
+}
+
 export function useItemDoc(itemCode) {
   return createResource({
     url: 'frappe.client.get',
