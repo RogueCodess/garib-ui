@@ -22,10 +22,9 @@ export function resolveExpiry(warrantyPeriodDays, purchaseDate, warrantyExpiryDa
  * @returns {'Active'|'Expiring Soon'|'Expired'|'Unknown'}
  */
 export function warrantyStatus(warrantyPeriodDays, purchaseDate, warrantyExpiryDate) {
-  const DAY = 24 * 60 * 60 * 1000
   const expiry = resolveExpiry(warrantyPeriodDays, purchaseDate, warrantyExpiryDate)
   if (!expiry) return 'Unknown'
-  const daysLeft = (expiry.getTime() - Date.now()) / DAY
+  const daysLeft = (expiry.getTime() - Date.now()) / (24 * 60 * 60 * 1000)
   if (daysLeft < 0) return 'Expired'
   if (daysLeft <= 30) return 'Expiring Soon'
   return 'Active'
