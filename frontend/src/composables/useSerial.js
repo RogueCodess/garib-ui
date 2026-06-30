@@ -1,4 +1,17 @@
 /**
+ * Resolve the effective warranty expiry date from available data.
+ * Prefers explicit warrantyExpiryDate over computed from purchaseDate + period.
+ * @returns {Date|null}
+ */
+export function resolveExpiry(warrantyPeriodDays, purchaseDate, warrantyExpiryDate) {
+  const DAY = 24 * 60 * 60 * 1000
+  if (warrantyExpiryDate) return new Date(warrantyExpiryDate)
+  if (purchaseDate && warrantyPeriodDays)
+    return new Date(new Date(purchaseDate).getTime() + warrantyPeriodDays * DAY)
+  return null
+}
+
+/**
  * Compute warranty status from available date data.
  * ERPNext v15 does not populate warrantyExpiryDate on Serial No until POS Close.
  * When it's null we fall back to: purchaseDate + warrantyPeriodDays.
@@ -10,20 +23,9 @@
  */
 export function warrantyStatus(warrantyPeriodDays, purchaseDate, warrantyExpiryDate) {
   const DAY = 24 * 60 * 60 * 1000
-  const now = Date.now()
-
-  let expiryMs = null
-
-  if (warrantyExpiryDate) {
-    expiryMs = new Date(warrantyExpiryDate).getTime()
-  } else if (purchaseDate && warrantyPeriodDays) {
-    expiryMs = new Date(purchaseDate).getTime() + warrantyPeriodDays * DAY
-  }
-
-  if (expiryMs === null) return 'Unknown'
-
-  const daysLeft = (expiryMs - now) / DAY
-
+  const expiry = resolveExpiry(warrantyPeriodDays, purchaseDate, warrantyExpiryDate)
+  if (!expiry) return 'Unknown'
+  const daysLeft = (expiry.getTime() - Date.now()) / DAY
   if (daysLeft < 0) return 'Expired'
   if (daysLeft <= 30) return 'Expiring Soon'
   return 'Active'

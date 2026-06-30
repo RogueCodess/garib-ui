@@ -17,7 +17,7 @@
 
 <script setup>
 import { computed } from 'vue'
-import { warrantyStatus } from '@/composables/useSerial'
+import { warrantyStatus, resolveExpiry } from '@/composables/useSerial'
 
 const props = defineProps({
   warrantyPeriodDays: { type: Number, default: null },
@@ -27,12 +27,9 @@ const props = defineProps({
 
 const DAY = 24 * 60 * 60 * 1000
 
-const effectiveExpiry = computed(() => {
-  if (props.warrantyExpiryDate) return new Date(props.warrantyExpiryDate)
-  if (props.purchaseDate && props.warrantyPeriodDays)
-    return new Date(new Date(props.purchaseDate).getTime() + props.warrantyPeriodDays * DAY)
-  return null
-})
+const effectiveExpiry = computed(() =>
+  resolveExpiry(props.warrantyPeriodDays, props.purchaseDate, props.warrantyExpiryDate)
+)
 
 const status = computed(() =>
   warrantyStatus(props.warrantyPeriodDays, props.purchaseDate, props.warrantyExpiryDate)
@@ -41,6 +38,7 @@ const status = computed(() =>
 const barWidth = computed(() => {
   if (!props.purchaseDate || !effectiveExpiry.value) return 0
   const total = effectiveExpiry.value.getTime() - new Date(props.purchaseDate).getTime()
+  if (total === 0) return 0
   const elapsed = Date.now() - new Date(props.purchaseDate).getTime()
   return Math.min(100, Math.max(0, (elapsed / total) * 100))
 })

@@ -43,4 +43,17 @@ describe('warrantyStatus', () => {
     const future = new Date(Date.now() + 200 * DAY).toISOString().slice(0, 10)
     expect(warrantyStatus(365, purchase, future)).toBe('Active')
   })
+
+  it('returns Unknown when warrantyPeriodDays is 0 (no warranty configured)', () => {
+    // 0 is falsy — treated as "no warranty period set"
+    const purchase = new Date(Date.now() - 30 * DAY).toISOString().slice(0, 10)
+    expect(warrantyStatus(0, purchase, null)).toBe('Unknown')
+  })
+
+  it('returns Active when purchaseDate is in the future (pre-registered serial)', () => {
+    // Future purchaseDate + warrantyPeriodDays → computed expiry also future → Active
+    // Bar will show 0% width but status "Active" — this is intentional/documented behavior
+    const futurePurchase = new Date(Date.now() + 30 * DAY).toISOString().slice(0, 10)
+    expect(warrantyStatus(365, futurePurchase, null)).toBe('Active')
+  })
 })
