@@ -26,13 +26,14 @@ router.beforeEach(async () => {
   try {
     const user = await frappeRequest({ url: '/api/method/frappe.auth.get_logged_user' })
     if (!user || user === 'Guest') {
-      window.location.href = '/login?redirect-to=/garib'
+      window.location.href = '/login?redirect-to=/garib/'
       return false
     }
     cachedUser = user
+    return true
   } catch (e) {
     console.error('Auth check failed:', e)
-    window.location.href = '/login?redirect-to=/garib'
+    window.location.href = '/login?redirect-to=/garib/'
     return false
   }
 })
