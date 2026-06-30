@@ -33,6 +33,6 @@ export function getStockEntry(name) {
   return createResource({
     url: 'frappe.client.get',
     params: { doctype: 'Stock Entry', name },
-    auto: true,
+    auto: false,
   })
 }

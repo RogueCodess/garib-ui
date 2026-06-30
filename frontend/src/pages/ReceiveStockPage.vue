@@ -176,6 +176,7 @@ async function submitForm() {
     const entryDoc = {
       doctype: 'Stock Entry',
       stock_entry_type: 'Material Receipt',
+      supplier: supplier.value.trim(),
       to_warehouse: targetWarehouse.value,
       items,
     }
