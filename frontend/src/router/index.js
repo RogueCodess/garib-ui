@@ -1,3 +1,4 @@
+import { ref } from 'vue'
 import { createRouter, createWebHistory } from 'vue-router'
 import { frappeRequest } from 'frappe-ui'
 
@@ -18,18 +19,18 @@ const router = createRouter({
 })
 
 // Module-level auth cache — avoids a round-trip on every navigation
-export let cachedUser = null
+export const cachedUser = ref(null)
 
 // Auth guard: redirect to Frappe login if not logged in
 router.beforeEach(async () => {
-  if (cachedUser) return // already authenticated this session
+  if (cachedUser.value) return // already authenticated this session
   try {
     const user = await frappeRequest({ url: '/api/method/frappe.auth.get_logged_user' })
     if (!user || user === 'Guest') {
       window.location.href = '/login?redirect-to=/garib/'
       return false
     }
-    cachedUser = user
+    cachedUser.value = user
     return true
   } catch (e) {
     console.error('Auth check failed:', e)

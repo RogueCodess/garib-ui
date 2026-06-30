@@ -34,9 +34,8 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
-import { frappeRequest } from 'frappe-ui'
-import { cachedUser as routerCachedUser } from '@/router'
+import { computed } from 'vue'
+import { cachedUser } from '@/router'
 
 const navItems = [
   { path: '/items',   icon: '📦', label: 'Items' },
@@ -46,18 +45,5 @@ const navItems = [
   { path: '/claims',  icon: '🔧', label: 'Warranty' },
 ]
 
-const currentUser = ref(routerCachedUser || '')
-
-onMounted(async () => {
-  if (routerCachedUser) {
-    currentUser.value = routerCachedUser
-    return
-  }
-  try {
-    const user = await frappeRequest({ url: '/api/method/frappe.auth.get_logged_user' })
-    currentUser.value = user
-  } catch (e) {
-    console.warn('Could not load current user:', e)
-  }
-})
+const currentUser = computed(() => cachedUser.value || '')
 </script>
